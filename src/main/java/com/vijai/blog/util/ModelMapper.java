@@ -9,6 +9,7 @@ import com.vijai.blog.payload.UserSummary;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ModelMapper {
@@ -36,7 +37,8 @@ public class ModelMapper {
         }).collect(Collectors.toList());
 
         pollResponse.setChoices(choiceResponses);
-        UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
+        Set<String> roles = creator.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet());
+        UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName(), roles);
         pollResponse.setCreatedBy(creatorSummary);
 
         if(userVote != null) {
