@@ -16,7 +16,7 @@ import java.time.Instant;
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true
 )
 @Data
-public class DateAudit {
+public class DateAudit extends DomainAudit{
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
