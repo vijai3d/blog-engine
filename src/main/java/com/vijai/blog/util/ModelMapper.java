@@ -1,15 +1,17 @@
 package com.vijai.blog.util;
 
 import com.vijai.blog.model.Poll;
+import com.vijai.blog.model.Post;
+import com.vijai.blog.model.Role;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.ChoiceResponse;
 import com.vijai.blog.payload.PollResponse;
+import com.vijai.blog.payload.PostResponse;
 import com.vijai.blog.payload.UserSummary;
+import com.vijai.blog.security.UserPrincipal;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModelMapper {
@@ -50,4 +52,26 @@ public class ModelMapper {
 
         return pollResponse;
     }
+
+    public static PostResponse mapPostsToPostResponse(Post post, User editor) {
+        PostResponse postResponse = new PostResponse();
+        postResponse.setId(post.getId());
+        postResponse.setTitle(post.getTitle());
+        postResponse.setBody(post.getBody());
+        UserSummary userSummary = new UserSummary(editor.getId(), editor.getUsername(), editor.getName(), mapRoles(editor.getRoles()));
+        postResponse.setCreatedBy(userSummary);
+        postResponse.setCreationDateTime(post.getCreatedAt());
+        postResponse.setUpdateDateTime(post.getUpdatedAt());
+        return postResponse;
+    }
+
+    public static Collection<String> mapRoles(Set<Role> roles) {
+        List<String> collection = new ArrayList<>();
+        for (Role role : roles) {
+            collection.add(role.getName().name());
+        }
+        return collection;
+    }
+
+
 }

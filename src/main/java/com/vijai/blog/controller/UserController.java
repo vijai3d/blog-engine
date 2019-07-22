@@ -1,6 +1,7 @@
 package com.vijai.blog.controller;
 
 import com.vijai.blog.exception.ResourceNotFoundException;
+import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.*;
 import com.vijai.blog.repository.PollRepository;
@@ -14,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -47,14 +47,17 @@ public class UserController {
     }
 
     @GetMapping("/user/checkUsernameAvailability")
-    public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        Boolean isAvailable = !userRepository.existsByUsername(username);
+    public UserIdentityAvailability checkUsernameAvailability(@RequestHeader("domain") Domain domain,
+                                                              @RequestParam(value = "username") String username) {
+
+        Boolean isAvailable = !userRepository.existsByDomainAndUsername(domain, username);
         return new UserIdentityAvailability(isAvailable);
     }
 
     @GetMapping("/user/checkEmailAvailability")
-    public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-        Boolean isAvailable = !userRepository.existsByEmail(email);
+    public UserIdentityAvailability checkEmailAvailability(@RequestHeader("domain") Domain domain,
+                                                           @RequestParam(value = "email") String email) {
+        Boolean isAvailable = !userRepository.existsByDomainAndEmail(domain, email);
         return new UserIdentityAvailability(isAvailable);
     }
 

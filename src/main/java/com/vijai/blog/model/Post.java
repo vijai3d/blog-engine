@@ -21,6 +21,7 @@ public class Post extends UserDateAudit {
     @Column(name = "title")
     private String title;
 
+    @Lob
     @Column(name = "body")
     private String body;
 }

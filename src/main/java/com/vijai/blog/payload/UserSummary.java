@@ -1,5 +1,6 @@
 package com.vijai.blog.payload;
 
+import com.vijai.blog.model.Domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

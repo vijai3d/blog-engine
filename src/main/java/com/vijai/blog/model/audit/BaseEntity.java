@@ -1,24 +1,20 @@
 package com.vijai.blog.model.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vijai.blog.model.Domain;
 import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"domain"}, allowGetters = true
 )
 @Data
-public class DomainAudit {
+class BaseEntity {
 
-    @NotBlank
-    @Size(max = 150)
-    @Column(name = "domain")
-    private String domain;
+    @Enumerated(EnumType.STRING)
+    private Domain domain;
+
 }

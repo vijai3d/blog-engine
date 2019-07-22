@@ -46,14 +46,19 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
+    @Column(name = "enabled", nullable = false, columnDefinition = "boolean default false")
+    private boolean enabled;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String name, String username, String email, String password) {
+    public User(String name, String username, String email, String password, Domain domain) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.enabled = false;
+        super.setDomain(domain);
     }
 }

@@ -26,15 +26,6 @@ import java.net.URI;
 public class PollController {
 
     @Autowired
-    private PollRepository pollRepository;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PollService pollService;
 
     private static final Logger logger = LoggerFactory.getLogger(PollController.class);

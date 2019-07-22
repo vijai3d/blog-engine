@@ -2,6 +2,7 @@ package com.vijai.blog.security;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.Role;
 import com.vijai.blog.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,25 +18,24 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails{
 
     private Long id;
-
     private String name;
-
     private String username;
-
     @JsonIgnore
     private String email;
-
     @JsonIgnore
     private String password;
-
+    private Domain domain;
+    private boolean enabled;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, Domain domain, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.domain = domain;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
 
@@ -50,6 +50,8 @@ public class UserPrincipal implements UserDetails{
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getDomain(),
+                user.isEnabled(),
                 authorities
         );
     }
@@ -98,8 +100,10 @@ public class UserPrincipal implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
+
+    public Domain getDomain() {return domain;}
 
     @Override
     public boolean equals(Object o) {

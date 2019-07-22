@@ -1,5 +1,6 @@
 package com.vijai.blog.security;
 
+import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.User;
 import com.vijai.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // This method is used by JwtAuthenticationFilter
     @Transactional
-    public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserDetails loadUserByDomainAndId(Domain domain, Long id) {
+        User user = userRepository.findByDomainAndId(domain, id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with id : " + id)
         );
 

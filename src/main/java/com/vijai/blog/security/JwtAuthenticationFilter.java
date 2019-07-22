@@ -1,5 +1,6 @@
 package com.vijai.blog.security;
 
+import com.vijai.blog.model.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-
-                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                Domain domain = Domain.valueOf(request.getHeader("domain"));
+                UserDetails userDetails = customUserDetailsService.loadUserByDomainAndId(domain, userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

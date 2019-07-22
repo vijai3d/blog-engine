@@ -1,5 +1,6 @@
 package com.vijai.blog.payload;
 
+import com.vijai.blog.model.Domain;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
