@@ -7,6 +7,8 @@ import java.time.Instant;
 @Data
 public class PostResponse {
     private Long id;
+    private String place;
+    private String teaser;
     private String title;
     private String body;
     private UserSummary createdBy;

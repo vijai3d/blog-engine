@@ -56,6 +56,8 @@ public class ModelMapper {
     public static PostResponse mapPostsToPostResponse(Post post, User editor) {
         PostResponse postResponse = new PostResponse();
         postResponse.setId(post.getId());
+        postResponse.setPlace(post.getPlace());
+        postResponse.setTeaser(post.getTeaser());
         postResponse.setTitle(post.getTitle());
         postResponse.setBody(post.getBody());
         UserSummary userSummary = new UserSummary(editor.getId(), editor.getUsername(), editor.getName(), mapRoles(editor.getRoles()));

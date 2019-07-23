@@ -5,11 +5,13 @@ import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.*;
 import com.vijai.blog.repository.PollRepository;
+import com.vijai.blog.repository.PostRepository;
 import com.vijai.blog.repository.UserRepository;
 import com.vijai.blog.repository.VoteRepository;
 import com.vijai.blog.security.CurrentUser;
 import com.vijai.blog.security.UserPrincipal;
 import com.vijai.blog.service.PollService;
+import com.vijai.blog.service.PostService;
 import com.vijai.blog.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +33,16 @@ public class UserController {
     private PollRepository pollRepository;
 
     @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
     private VoteRepository voteRepository;
 
     @Autowired
     private PollService pollService;
+
+    @Autowired
+    private PostService postService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -66,10 +74,11 @@ public class UserController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        long postCount = postRepository.countByCreatedBy(user.getId());
         long pollCount = pollRepository.countByCreatedBy(user.getId());
         long voteCount = voteRepository.countByUserId(user.getId());
 
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), pollCount, voteCount);
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), postCount, pollCount, voteCount);
 
         return userProfile;
     }
@@ -82,6 +91,14 @@ public class UserController {
         return pollService.getPollsCreatedBy(username, currentUser, page, size);
     }
 
+    @GetMapping("/users/{username}/posts")
+    public PagedResponse<PostResponse> getUserPosts(@RequestHeader("domain") Domain domain,
+                                                    @CurrentUser UserPrincipal currentUser,
+                                                    @PathVariable(value = "username") String username,
+                                                    @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                    @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return postService.getPostsCreatedBy(domain, username, currentUser, page, size);
+    }
 
     @GetMapping("/users/{username}/votes")
     public PagedResponse<PollResponse> getPollsVotedBy(@PathVariable(value = "username") String username,

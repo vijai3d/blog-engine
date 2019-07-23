@@ -13,6 +13,7 @@ public class UserProfile {
     private String username;
     private String name;
     private Instant joinedAt;
+    private Long postCount;
     private Long pollCount;
     private Long voteCount;
 }

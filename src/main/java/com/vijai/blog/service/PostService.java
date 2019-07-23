@@ -1,9 +1,11 @@
 package com.vijai.blog.service;
 
 import com.vijai.blog.exception.BadRequestException;
+import com.vijai.blog.exception.ResourceNotFoundException;
 import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.Poll;
 import com.vijai.blog.model.Post;
+import com.vijai.blog.model.User;
 import com.vijai.blog.payload.PagedResponse;
 import com.vijai.blog.payload.PollResponse;
 import com.vijai.blog.payload.PostResponse;
@@ -31,10 +33,10 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public PagedResponse<PostResponse> getAllPolls(Domain domain, UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<PostResponse> getAllPosts(Domain domain, UserPrincipal currentUser, int page, int size) {
         validatePageNumberAndSize(page, size);
 
-        // Retrieve Polls
+        // Retrieve Posts
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Post> posts = postRepository.findAllByDomain(domain, pageable);
 
@@ -43,13 +45,41 @@ public class PostService {
                     posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
         }
 
-
         List<PostResponse> postResponses = posts.map(post -> {
             return ModelMapper.mapPostsToPostResponse(post, userRepository.getOne(post.getCreatedBy()));
         }).getContent();
 
         return new PagedResponse<>(postResponses, posts.getNumber(),
                 posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
+    }
+
+
+    public PagedResponse<PostResponse> getPostsCreatedBy(Domain domain, String username, UserPrincipal currentUser, int page, int size) {
+        validatePageNumberAndSize(page, size);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        // Retrieve all posts created by the given username
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Post> posts = postRepository.findByDomainAndCreatedBy(domain, user.getId(), pageable);
+
+        if (posts.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), posts.getNumber(),
+                    posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
+        }
+
+        List<PostResponse> postResponses = posts
+                .map(post -> ModelMapper.mapPostsToPostResponse(post, userRepository.getOne(post.getCreatedBy())))
+                .getContent();
+
+        return new PagedResponse<>(postResponses, posts.getNumber(),
+                posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
+    }
+
+    public PostResponse getPostById(Domain domain, Long postId) {
+        Post post = postRepository.findByDomainAndId(domain, postId);
+        return ModelMapper.mapPostsToPostResponse(post, userRepository.getOne(post.getCreatedBy()));
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -61,4 +91,6 @@ public class PostService {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
         }
     }
+
+
 }
