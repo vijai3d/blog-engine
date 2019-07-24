@@ -22,7 +22,7 @@ public class PostController {
                                                 @CurrentUser UserPrincipal currentUser,
                                                 @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return postService.getAllPosts(domain, currentUser, page, size);
+        return postService.getAllPublishedPosts(domain, page, size);
     }
 
     @GetMapping("/{id}")

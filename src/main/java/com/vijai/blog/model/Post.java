@@ -34,4 +34,8 @@ public class Post extends UserDateAudit {
     @Lob
     @Column(name = "body")
     private String body;
+
+    @NotBlank
+    @Column(name = "published", columnDefinition = "boolean default false", nullable = false)
+    private boolean published;
 }

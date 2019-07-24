@@ -33,14 +33,28 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public PagedResponse<PostResponse> getAllPosts(Domain domain, UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<PostResponse> getAllPosts(Domain domain, int page, int size) {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Posts
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Post> posts = postRepository.findAllByDomain(domain, pageable);
 
-        if(posts.getNumberOfElements() == 0) {
+        return getPostResponsePagedResponse(posts);
+    }
+
+    public PagedResponse<PostResponse> getAllPublishedPosts(Domain domain, int page, int size) {
+        validatePageNumberAndSize(page, size);
+
+        // Retrieve Posts
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Post> posts = postRepository.findAllByDomainAndPublishedTrue(domain, pageable);
+
+        return getPostResponsePagedResponse(posts);
+    }
+
+    private PagedResponse<PostResponse> getPostResponsePagedResponse(Page<Post> posts) {
+        if (posts.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), posts.getNumber(),
                     posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
         }
@@ -52,7 +66,6 @@ public class PostService {
         return new PagedResponse<>(postResponses, posts.getNumber(),
                 posts.getSize(), posts.getTotalElements(), posts.getTotalPages(), posts.isLast());
     }
-
 
     public PagedResponse<PostResponse> getPostsCreatedBy(Domain domain, String username, UserPrincipal currentUser, int page, int size) {
         validatePageNumberAndSize(page, size);

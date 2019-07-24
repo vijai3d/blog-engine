@@ -20,4 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findByDomainAndId(Domain domain, Long postId);
 
     long countByCreatedBy(Long id);
+
+    Page<Post> findAllByDomainAndPublishedTrue(Domain domain, Pageable pageable);
 }
