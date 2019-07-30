@@ -1,14 +1,23 @@
 package com.vijai.blog.controller;
 
 import com.vijai.blog.model.Domain;
+import com.vijai.blog.model.Post;
+import com.vijai.blog.payload.ApiResponse;
 import com.vijai.blog.payload.PagedResponse;
+import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.payload.PostResponse;
 import com.vijai.blog.security.CurrentUser;
 import com.vijai.blog.security.UserPrincipal;
 import com.vijai.blog.service.PostService;
 import com.vijai.blog.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -31,5 +40,18 @@ public class PostController {
         return postService.getPostById(domain, postId);
     }
 
+    @PostMapping(consumes = "application/json;charset=UTF-8")
+    @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> createPost(@RequestHeader("domain") Domain domain,
+                                        @Valid @RequestBody PostRequest postRequest) {
+      Post post = postService.createPost(domain, postRequest);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{postId}")
+                .buildAndExpand(post.getId()).toUri();
+
+        return ResponseEntity.created(location)
+                .body(new ApiResponse(true, "Post Created Successfully"));
+    }
 
 }

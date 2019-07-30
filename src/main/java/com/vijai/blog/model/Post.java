@@ -2,6 +2,7 @@ package com.vijai.blog.model;
 
 import com.vijai.blog.model.audit.UserDateAudit;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -35,7 +36,6 @@ public class Post extends UserDateAudit {
     @Column(name = "body")
     private String body;
 
-    @NotBlank
     @Column(name = "published", columnDefinition = "boolean default false", nullable = false)
     private boolean published;
 }

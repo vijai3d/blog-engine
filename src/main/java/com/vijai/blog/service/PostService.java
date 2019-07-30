@@ -8,6 +8,7 @@ import com.vijai.blog.model.Post;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.PagedResponse;
 import com.vijai.blog.payload.PollResponse;
+import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.payload.PostResponse;
 import com.vijai.blog.repository.PostRepository;
 import com.vijai.blog.repository.UserRepository;
@@ -106,4 +107,15 @@ public class PostService {
     }
 
 
+    public Post createPost(Domain domain, PostRequest postRequest) {
+        Post post = new Post();
+        post.setDomain(domain);
+        post.setTitle(postRequest.getTitle());
+        post.setPlace(postRequest.getPlace());
+        post.setTeaser(postRequest.getTeaser());
+        post.setBody(postRequest.getBody());
+        post.setPublished(postRequest.isPublish());
+        postRepository.save(post);
+        return post;
+    }
 }
