@@ -60,6 +60,7 @@ public class ModelMapper {
         postResponse.setTeaser(post.getTeaser());
         postResponse.setTitle(post.getTitle());
         postResponse.setBody(post.getBody());
+        postResponse.setPublish(post.isPublished());
         UserSummary userSummary = new UserSummary(editor.getId(), editor.getUsername(), editor.getName(), mapRoles(editor.getRoles()));
         postResponse.setCreatedBy(userSummary);
         postResponse.setCreationDateTime(post.getCreatedAt());

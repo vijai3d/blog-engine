@@ -11,6 +11,7 @@ public class PostResponse {
     private String teaser;
     private String title;
     private String body;
+    private boolean publish;
     private UserSummary createdBy;
     private Instant creationDateTime;
     private Instant updateDateTime;

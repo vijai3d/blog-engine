@@ -3,11 +3,9 @@ package com.vijai.blog.service;
 import com.vijai.blog.exception.BadRequestException;
 import com.vijai.blog.exception.ResourceNotFoundException;
 import com.vijai.blog.model.Domain;
-import com.vijai.blog.model.Poll;
 import com.vijai.blog.model.Post;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.PagedResponse;
-import com.vijai.blog.payload.PollResponse;
 import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.payload.PostResponse;
 import com.vijai.blog.repository.PostRepository;
@@ -110,12 +108,27 @@ public class PostService {
     public Post createPost(Domain domain, PostRequest postRequest) {
         Post post = new Post();
         post.setDomain(domain);
+        mapPostRequestToPost(postRequest, post);
+        return post;
+    }
+
+    public Post updatePost(Domain domain, Long postId, PostRequest postRequest) {
+        Post post = postRepository.findByDomainAndId(domain, postId);
+        mapPostRequestToPost(postRequest, post);
+        return post;
+    }
+
+    private void mapPostRequestToPost(PostRequest postRequest, Post post) {
         post.setTitle(postRequest.getTitle());
         post.setPlace(postRequest.getPlace());
         post.setTeaser(postRequest.getTeaser());
         post.setBody(postRequest.getBody());
         post.setPublished(postRequest.isPublish());
         postRepository.save(post);
-        return post;
+    }
+
+    public void deletePost(Domain domain, Long postId) {
+        Post post = postRepository.findByDomainAndId(domain, postId);
+        postRepository.delete(post);
     }
 }
