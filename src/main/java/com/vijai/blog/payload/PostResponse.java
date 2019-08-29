@@ -3,6 +3,7 @@ package com.vijai.blog.payload;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 public class PostResponse {
@@ -10,6 +11,8 @@ public class PostResponse {
     private String place;
     private String teaser;
     private String title;
+    private Date startDate;
+    private Date endDate;
     private String body;
     private boolean publish;
     private UserSummary createdBy;

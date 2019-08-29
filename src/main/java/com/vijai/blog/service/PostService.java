@@ -108,23 +108,16 @@ public class PostService {
     public Post createPost(Domain domain, PostRequest postRequest) {
         Post post = new Post();
         post.setDomain(domain);
-        mapPostRequestToPost(postRequest, post);
+        ModelMapper.mapPostRequestToPost(postRequest, post);
+        postRepository.save(post);
         return post;
     }
 
     public Post updatePost(Domain domain, Long postId, PostRequest postRequest) {
         Post post = postRepository.findByDomainAndId(domain, postId);
-        mapPostRequestToPost(postRequest, post);
-        return post;
-    }
-
-    private void mapPostRequestToPost(PostRequest postRequest, Post post) {
-        post.setTitle(postRequest.getTitle());
-        post.setPlace(postRequest.getPlace());
-        post.setTeaser(postRequest.getTeaser());
-        post.setBody(postRequest.getBody());
-        post.setPublished(postRequest.isPublish());
+        ModelMapper.mapPostRequestToPost(postRequest, post);
         postRepository.save(post);
+        return post;
     }
 
     public void deletePost(Domain domain, Long postId) {

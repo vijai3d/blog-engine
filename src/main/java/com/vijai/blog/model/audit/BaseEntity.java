@@ -12,7 +12,7 @@ import javax.persistence.*;
 @JsonIgnoreProperties(value = {"domain"}, allowGetters = true
 )
 @Data
-class BaseEntity {
+public class BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Domain domain;

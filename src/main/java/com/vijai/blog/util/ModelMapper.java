@@ -1,13 +1,7 @@
 package com.vijai.blog.util;
 
-import com.vijai.blog.model.Poll;
-import com.vijai.blog.model.Post;
-import com.vijai.blog.model.Role;
-import com.vijai.blog.model.User;
-import com.vijai.blog.payload.ChoiceResponse;
-import com.vijai.blog.payload.PollResponse;
-import com.vijai.blog.payload.PostResponse;
-import com.vijai.blog.payload.UserSummary;
+import com.vijai.blog.model.*;
+import com.vijai.blog.payload.*;
 import com.vijai.blog.security.UserPrincipal;
 
 import java.time.Instant;
@@ -59,6 +53,8 @@ public class ModelMapper {
         postResponse.setPlace(post.getPlace());
         postResponse.setTeaser(post.getTeaser());
         postResponse.setTitle(post.getTitle());
+        postResponse.setStartDate(post.getStartDate());
+        postResponse.setEndDate(post.getEndDate());
         postResponse.setBody(post.getBody());
         postResponse.setPublish(post.isPublished());
         UserSummary userSummary = new UserSummary(editor.getId(), editor.getUsername(), editor.getName(), mapRoles(editor.getRoles()));
@@ -66,6 +62,16 @@ public class ModelMapper {
         postResponse.setCreationDateTime(post.getCreatedAt());
         postResponse.setUpdateDateTime(post.getUpdatedAt());
         return postResponse;
+    }
+
+    public static void mapPostRequestToPost(PostRequest postRequest, Post post) {
+        post.setTitle(postRequest.getTitle());
+        post.setPlace(postRequest.getPlace());
+        post.setTeaser(postRequest.getTeaser());
+        post.setStartDate(postRequest.getStartDate());
+        post.setEndDate(postRequest.getEndDate());
+        post.setBody(postRequest.getBody());
+        post.setPublished(postRequest.isPublish());
     }
 
     public static Collection<String> mapRoles(Set<Role> roles) {
@@ -76,5 +82,17 @@ public class ModelMapper {
         return collection;
     }
 
+    public static CategoryResponse mapCategoryToResponse(Category category) {
+        CategoryResponse response = new CategoryResponse();
+        response.setId(category.getId());
+        response.setCategoryName(category.getName());
+        response.setDef(category.isDef());
+        return response;
+    }
 
+    public static Category mapCategoryResponseToCategory(Category category, CategoryRequest categoryRequest) {
+        category.setName(categoryRequest.getCategoryName());
+        category.setDef(categoryRequest.isDef());
+        return category;
+    }
 }
