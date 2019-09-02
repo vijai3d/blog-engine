@@ -68,4 +68,14 @@ public class CategoryController {
         return ResponseEntity.ok()
                 .body(new ApiResponse(true, "Category Deleted Successfully"));
     }
+
+    @PostMapping("/default/{id}")
+    @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> makeCategoryDefault(@RequestHeader("domain") Domain domain,
+                                            @PathVariable(value = "id") Long id) {
+        categoryService.makeDefault(domain, id);
+
+        return ResponseEntity.ok()
+                .body(new ApiResponse(true, "Category is default now"));
+    }
 }

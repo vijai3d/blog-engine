@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CategoryRequest {
 
-    @NotNull
     private Long id;
 
     @NotNull

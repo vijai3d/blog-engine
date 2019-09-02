@@ -44,4 +44,12 @@ public class CategoryService {
         categoryRepository.save(category);
         return category;
     }
+
+    public void makeDefault(Domain domain, Long id) {
+        List<Category> categories = categoryRepository.findAllByDomain(domain);
+        categories.forEach(category -> category.setDef(false));
+        Category categoryDefault = categoryRepository.findByDomainAndId(domain, id);
+        categoryDefault.setDef(true);
+        categoryRepository.save(categoryDefault);
+     }
 }
