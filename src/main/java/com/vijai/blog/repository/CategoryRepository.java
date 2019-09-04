@@ -13,4 +13,6 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     void removeByDomainAndId(Domain domain, Long id);
 
     Category findByDomainAndId(Domain domain, Long id);
+
+    List<Category> findAllByDomainAndIdIn(Domain domain, List<Long> ids);
 }

@@ -2,12 +2,14 @@ package com.vijai.blog.service;
 
 import com.vijai.blog.exception.BadRequestException;
 import com.vijai.blog.exception.ResourceNotFoundException;
+import com.vijai.blog.model.Category;
 import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.Post;
 import com.vijai.blog.model.User;
 import com.vijai.blog.payload.PagedResponse;
 import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.payload.PostResponse;
+import com.vijai.blog.repository.CategoryRepository;
 import com.vijai.blog.repository.PostRepository;
 import com.vijai.blog.repository.UserRepository;
 import com.vijai.blog.security.UserPrincipal;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +35,8 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public PagedResponse<PostResponse> getAllPosts(Domain domain, int page, int size) {
         validatePageNumberAndSize(page, size);
@@ -109,6 +115,10 @@ public class PostService {
         Post post = new Post();
         post.setDomain(domain);
         ModelMapper.mapPostRequestToPost(postRequest, post);
+        List<Long> ids = Arrays.asList(1L);
+
+        List<Category> categories = categoryRepository.findAllByDomainAndIdIn(domain, ids);
+        post.setCategories(categories);
         postRepository.save(post);
         return post;
     }

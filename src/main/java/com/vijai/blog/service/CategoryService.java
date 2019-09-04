@@ -4,7 +4,6 @@ import com.vijai.blog.model.Category;
 import com.vijai.blog.model.Domain;
 import com.vijai.blog.payload.CategoryRequest;
 import com.vijai.blog.payload.CategoryResponse;
-import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.repository.CategoryRepository;
 import com.vijai.blog.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class CategoryService {
 
     public Category updateCategory(Domain domain, CategoryRequest categoryRequest) {
         Category category = categoryRepository.findByDomainAndId(domain, categoryRequest.getId());
-        ModelMapper.mapCategoryResponseToCategory(category, categoryRequest);
+        ModelMapper.mapCategoryRequestToCategory(category, categoryRequest);
         categoryRepository.save(category);
         return category;
     }

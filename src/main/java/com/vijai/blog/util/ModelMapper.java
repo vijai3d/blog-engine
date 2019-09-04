@@ -90,7 +90,7 @@ public class ModelMapper {
         return response;
     }
 
-    public static Category mapCategoryResponseToCategory(Category category, CategoryRequest categoryRequest) {
+    public static Category mapCategoryRequestToCategory(Category category, CategoryRequest categoryRequest) {
         category.setName(categoryRequest.getCategoryName());
         category.setDef(categoryRequest.isDef());
         return category;

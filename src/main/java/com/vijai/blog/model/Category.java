@@ -16,13 +16,13 @@ public class Category extends BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(name = "category_name")
+    @Column(name = "category_name", unique = true)
     private String name;
 
     @NotNull
     @Column(name = "def", columnDefinition = "boolean default false", nullable = false)
     private boolean def;
 
-    @OneToMany(mappedBy="category")
+    @ManyToMany(mappedBy="categories")
     private List<Post> posts;
 }

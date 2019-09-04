@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -48,7 +49,11 @@ public class Post extends UserDateAudit {
     @Column(name = "published", columnDefinition = "boolean default false", nullable = false)
     private boolean published;
 
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private Category category;
+    @ManyToMany
+    @JoinTable(
+            name = "Post_Category",
+            joinColumns = { @JoinColumn(name = "post_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id") }
+    )
+    private List<Category> categories;
 }
