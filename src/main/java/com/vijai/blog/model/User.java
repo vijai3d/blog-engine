@@ -53,6 +53,9 @@ public class User extends DateAudit {
     @JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private ConfirmationToken confirmationToken;
+
     public User(String name, String username, String email, String password, Domain domain) {
         this.name = name;
         this.username = username;

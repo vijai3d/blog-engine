@@ -12,10 +12,12 @@ import com.vijai.blog.security.CurrentUser;
 import com.vijai.blog.security.UserPrincipal;
 import com.vijai.blog.service.PollService;
 import com.vijai.blog.service.PostService;
+import com.vijai.blog.service.UserService;
 import com.vijai.blog.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +46,29 @@ public class UserController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserService userService;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @GetMapping("user/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public PagedResponse<UserResponse> getAllUsers(@RequestHeader("domain") Domain domain,
+                                                   @CurrentUser UserPrincipal currentUser,
+                                                   @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return userService.getAllUsers(domain, page, size);
+    }
+
+    @DeleteMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteUser(@RequestHeader("domain") Domain domain,
+                                        @PathVariable(value = "id") Long postId) {
+       userService.deleteUser(domain, postId);
+
+        return ResponseEntity.ok()
+                .body(new ApiResponse(true, "Post Deleted Successfully"));
+    }
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('AUTHOR') or hasRole('USER') or hasRole('ADMIN')")

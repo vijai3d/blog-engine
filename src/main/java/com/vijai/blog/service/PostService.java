@@ -6,6 +6,7 @@ import com.vijai.blog.model.Category;
 import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.Post;
 import com.vijai.blog.model.User;
+import com.vijai.blog.payload.CategoryRequest;
 import com.vijai.blog.payload.PagedResponse;
 import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.payload.PostResponse;
@@ -26,10 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
-public class PostService {
+public class PostService implements ValidationInterface{
 
     @Autowired
     private PostRepository postRepository;
@@ -100,25 +102,11 @@ public class PostService {
         return ModelMapper.mapPostsToPostResponse(post, userRepository.getOne(post.getCreatedBy()));
     }
 
-    private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
-        }
-
-        if(size > AppConstants.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
-        }
-    }
-
-
     public Post createPost(Domain domain, PostRequest postRequest) {
         Post post = new Post();
         post.setDomain(domain);
         ModelMapper.mapPostRequestToPost(postRequest, post);
-        List<Long> ids = Arrays.asList(1L);
-
-        List<Category> categories = categoryRepository.findAllByDomainAndIdIn(domain, ids);
-        post.setCategories(categories);
+        post.setCategories(getCategoriesFromPostRequest(domain, postRequest));
         postRepository.save(post);
         return post;
     }
@@ -126,6 +114,7 @@ public class PostService {
     public Post updatePost(Domain domain, Long postId, PostRequest postRequest) {
         Post post = postRepository.findByDomainAndId(domain, postId);
         ModelMapper.mapPostRequestToPost(postRequest, post);
+        post.setCategories(getCategoriesFromPostRequest(domain, postRequest));
         postRepository.save(post);
         return post;
     }
@@ -133,5 +122,10 @@ public class PostService {
     public void deletePost(Domain domain, Long postId) {
         Post post = postRepository.findByDomainAndId(domain, postId);
         postRepository.delete(post);
+    }
+
+    private List<Category> getCategoriesFromPostRequest(Domain domain, PostRequest postRequest) {
+        List<Long> categoriesIds = postRequest.getCategories().stream().map(CategoryRequest::getId).collect(Collectors.toList());
+        return categoryRepository.findAllByDomainAndIdIn(domain, categoriesIds);
     }
 }

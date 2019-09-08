@@ -60,7 +60,9 @@ public class ModelMapper {
         UserSummary userSummary = new UserSummary(editor.getId(), editor.getUsername(), editor.getName(), mapRoles(editor.getRoles()));
         postResponse.setCreatedBy(userSummary);
         postResponse.setCreationDateTime(post.getCreatedAt());
+        List<String> categories = post.getCategories().stream().map(cat -> mapCategoryToResponse(cat).getCategoryName()).collect(Collectors.toList());
         postResponse.setUpdateDateTime(post.getUpdatedAt());
+        postResponse.setCategories(categories);
         return postResponse;
     }
 
@@ -94,5 +96,22 @@ public class ModelMapper {
         category.setName(categoryRequest.getCategoryName());
         category.setDef(categoryRequest.isDef());
         return category;
+    }
+
+    public static UserResponse mapUserToUserResponse(User user) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setName(user.getName());
+        userResponse.setUsername(user.getUsername());
+        userResponse.setCreationDateTime(user.getCreatedAt());
+        userResponse.setUpdateDateTime(user.getUpdatedAt());
+        userResponse.setRole(appendUserRoles(user));
+        userResponse.setEnabled(user.isEnabled());
+        userResponse.setEmail(user.getEmail());
+        return userResponse;
+    }
+
+    private static Collection<String> appendUserRoles(User user) {
+        return user.getRoles().stream().map(role -> role.getName().toString()).collect(Collectors.toList());
     }
 }

@@ -2,6 +2,8 @@ package com.vijai.blog.repository;
 
 import com.vijai.blog.model.Domain;
 import com.vijai.blog.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByDomainAndEmail(Domain domain, String email);
 
     Optional<User> findByDomainAndId(Domain domain, Long id);
+
+    Page<User> findAllByDomain(Domain domain, Pageable pageable);
 }

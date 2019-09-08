@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class PostResponse {
@@ -18,4 +19,5 @@ public class PostResponse {
     private UserSummary createdBy;
     private Instant creationDateTime;
     private Instant updateDateTime;
+    private List<String> categories;
 }
