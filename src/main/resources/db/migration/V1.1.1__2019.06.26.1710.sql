@@ -1,0 +1,1 @@
+insert into category (domain, category_name, def) values ('marshrut', 'Uncategorized', 1);

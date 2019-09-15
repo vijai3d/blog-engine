@@ -89,6 +89,7 @@ public class ModelMapper {
         response.setId(category.getId());
         response.setCategoryName(category.getName());
         response.setDef(category.isDef());
+        response.setPostCount(category.getPosts().size());
         return response;
     }
 

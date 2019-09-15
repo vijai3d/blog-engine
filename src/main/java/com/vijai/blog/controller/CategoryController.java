@@ -8,6 +8,8 @@ import com.vijai.blog.payload.CategoryRequest;
 import com.vijai.blog.payload.CategoryResponse;
 import com.vijai.blog.payload.PostRequest;
 import com.vijai.blog.repository.CategoryRepository;
+import com.vijai.blog.security.CurrentUser;
+import com.vijai.blog.security.UserPrincipal;
 import com.vijai.blog.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

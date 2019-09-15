@@ -15,4 +15,6 @@ public class CategoryResponse {
 
     @NotNull
     private boolean def;
+
+    private int postCount;
 }
