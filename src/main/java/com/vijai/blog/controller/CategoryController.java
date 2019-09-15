@@ -61,21 +61,18 @@ public class CategoryController {
                 .body(new ApiResponse(true, "Category Updated Successfully"));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{name}")
     @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteCategory(@RequestHeader("domain") Domain domain,
-                                            @PathVariable(value = "id") Long id) {
-        categoryService.delete(domain, id);
-
-        return ResponseEntity.ok()
-                .body(new ApiResponse(true, "Category Deleted Successfully"));
+                                            @PathVariable(value = "name") String name) {
+       return categoryService.delete(domain, name);
     }
 
-    @PostMapping("/default/{id}")
+    @PostMapping("/default/{name}")
     @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
     public ResponseEntity<?> makeCategoryDefault(@RequestHeader("domain") Domain domain,
-                                            @PathVariable(value = "id") Long id) {
-        categoryService.makeDefault(domain, id);
+                                            @PathVariable(value = "name") String name) {
+        categoryService.makeDefault(domain, name);
 
         return ResponseEntity.ok()
                 .body(new ApiResponse(true, "Category is default now"));

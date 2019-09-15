@@ -86,7 +86,6 @@ public class ModelMapper {
 
     public static CategoryResponse mapCategoryToResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
-        response.setId(category.getId());
         response.setCategoryName(category.getName());
         response.setDef(category.isDef());
         response.setPostCount(category.getPosts().size());
@@ -95,7 +94,6 @@ public class ModelMapper {
 
     public static Category mapCategoryRequestToCategory(Category category, CategoryRequest categoryRequest) {
         category.setName(categoryRequest.getCategoryName());
-        category.setDef(categoryRequest.isDef());
         return category;
     }
 

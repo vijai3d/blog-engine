@@ -12,7 +12,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 
     void removeByDomainAndId(Domain domain, Long id);
 
-    Category findByDomainAndId(Domain domain, Long id);
+    Category findByDomainAndName(Domain domain, String name);
 
-    List<Category> findAllByDomainAndIdIn(Domain domain, List<Long> ids);
+    List<Category> findAllByDomainAndNameIn(Domain domain, List<String> ids);
 }

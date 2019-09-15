@@ -1,6 +1,5 @@
 package com.vijai.blog.service;
 
-import com.vijai.blog.exception.BadRequestException;
 import com.vijai.blog.exception.ResourceNotFoundException;
 import com.vijai.blog.model.Category;
 import com.vijai.blog.model.Domain;
@@ -14,7 +13,6 @@ import com.vijai.blog.repository.CategoryRepository;
 import com.vijai.blog.repository.PostRepository;
 import com.vijai.blog.repository.UserRepository;
 import com.vijai.blog.security.UserPrincipal;
-import com.vijai.blog.util.AppConstants;
 import com.vijai.blog.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,8 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,7 +121,6 @@ public class PostService implements ValidationInterface{
     }
 
     private List<Category> getCategoriesFromPostRequest(Domain domain, PostRequest postRequest) {
-        List<Long> categoriesIds = postRequest.getCategories().stream().map(CategoryRequest::getId).collect(Collectors.toList());
-        return categoryRepository.findAllByDomainAndIdIn(domain, categoriesIds);
+        return categoryRepository.findAllByDomainAndNameIn(domain, postRequest.getCategories());
     }
 }

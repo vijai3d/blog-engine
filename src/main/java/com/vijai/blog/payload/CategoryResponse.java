@@ -8,9 +8,6 @@ import javax.validation.constraints.NotNull;
 public class CategoryResponse {
 
     @NotNull
-    private Long id;
-
-    @NotNull
     private String categoryName;
 
     @NotNull
